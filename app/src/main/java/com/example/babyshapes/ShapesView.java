@@ -145,7 +145,7 @@ public class ShapesView extends View {
                 postDelayed(() -> {
                     flashing = false;
                     nextShape();
-                }, 1000);
+                }, 80);
             }
 
             return true;
