@@ -32,7 +32,7 @@ public class ShapesView extends View {
 
     public ShapesView(Context context) {
         super(context);
-        setBackgroundColor(Color.BLACK);
+        setBackgroundColor(Color.WHITE);
         setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
@@ -131,26 +131,29 @@ public class ShapesView extends View {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        if (e.getAction() == MotionEvent.ACTION_DOWN && !flashing) {
+public boolean onTouchEvent(MotionEvent e) {
+    if (e.getAction() == MotionEvent.ACTION_DOWN) {
+        float dx = e.getX() - cx;
+        float dy = e.getY() - cy;
 
-            float dx = e.getX() - cx;
-            float dy = e.getY() - cy;
-
-            if (dx * dx + dy * dy <= size * size * 0.55f) {
-
-                flashing = true;
-                invalidate();
-
-                postDelayed(() -> {
-                    flashing = false;
+        if (dx * dx + dy * dy <= size * size * 0.55f) {
+            animate()
+                .scaleX(0.15f)
+                .scaleY(0.15f)
+                .alpha(0f)
+                .setDuration(120)
+                .withEndAction(() -> {
+                    setScaleX(1f);
+                    setScaleY(1f);
+                    setAlpha(1f);
                     nextShape();
-                }, 80);
-            }
-
-            return true;
+                })
+                .start();
         }
 
         return true;
     }
+
+    return true;
+}
 }
