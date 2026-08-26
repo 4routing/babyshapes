@@ -16,20 +16,20 @@ import java.util.Random;
 public class ShapesView extends View {
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint dotsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Random random = new Random();
 
-    // Sunet scurt la atingerea formei
     private final ToneGenerator toneGenerator =
             new ToneGenerator(AudioManager.STREAM_MUSIC, 70);
 
     private final int[] colors = {
-            Color.rgb(229, 57, 53),   // rosu
-            Color.rgb(30, 136, 229),  // albastru
-            Color.rgb(251, 192, 45),  // galben
-            Color.rgb(67, 160, 71),   // verde
-            Color.rgb(142, 36, 170),  // mov
-            Color.rgb(251, 140, 0),   // portocaliu
-            Color.rgb(236, 64, 122)   // roz
+            Color.rgb(229, 57, 53),
+            Color.rgb(30, 136, 229),
+            Color.rgb(251, 192, 45),
+            Color.rgb(67, 160, 71),
+            Color.rgb(142, 36, 170),
+            Color.rgb(251, 140, 0),
+            Color.rgb(236, 64, 122)
     };
 
     private float cx, cy, size;
@@ -40,7 +40,6 @@ public class ShapesView extends View {
     public ShapesView(Context context) {
         super(context);
 
-        // Fundal alb permanent
         setBackgroundColor(Color.WHITE);
 
         setSystemUiVisibility(
@@ -57,7 +56,6 @@ public class ShapesView extends View {
     ) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        // Marimea formelor
         size = Math.min(w, h) * 0.28f;
 
         if (!initialized) {
@@ -72,17 +70,21 @@ public class ShapesView extends View {
             return;
         }
 
-        // Alege una dintre cele 4 forme
         shape = random.nextInt(4);
 
-        // Alege o culoare aleatorie
-        paint.setColor(
-                colors[random.nextInt(colors.length)]
-        );
+        int selectedColor =
+                colors[random.nextInt(colors.length)];
 
-        float margin = size * 0.65f + 20f;
+        paint.setColor(selectedColor);
 
-        // Pozitie aleatorie pe ecran
+        // Cubuletele au aceeasi culoare
+        dotsPaint.setColor(selectedColor);
+
+        // Putin transparente
+        dotsPaint.setAlpha(150);
+
+        float margin = size * 0.85f + 30f;
+
         cx = margin
                 + random.nextFloat()
                 * Math.max(
@@ -105,11 +107,52 @@ public class ShapesView extends View {
 
         super.onDraw(canvas);
 
-        // IMPORTANT:
-        // Ecranul este intotdeauna alb
+        // Fundal alb permanent
         canvas.drawColor(Color.WHITE);
 
         float r = size / 2f;
+
+        // ============================
+        // HALO CU CUBULETE
+        // ============================
+
+        int numberOfDots = 32;
+
+        float haloRadius = r * 1.45f;
+
+        float dotSize = Math.max(
+                5f,
+                size * 0.035f
+        );
+
+        for (int i = 0; i < numberOfDots; i++) {
+
+            double angle =
+                    (Math.PI * 2 * i)
+                    / numberOfDots;
+
+            float x =
+                    cx
+                    + (float) Math.cos(angle)
+                    * haloRadius;
+
+            float y =
+                    cy
+                    + (float) Math.sin(angle)
+                    * haloRadius;
+
+            canvas.drawRect(
+                    x - dotSize / 2,
+                    y - dotSize / 2,
+                    x + dotSize / 2,
+                    y + dotSize / 2,
+                    dotsPaint
+            );
+        }
+
+        // ============================
+        // FORMA PRINCIPALA
+        // ============================
 
         switch (shape) {
 
@@ -124,7 +167,6 @@ public class ShapesView extends View {
                 );
 
                 break;
-
 
             // PATRAT
             case 1:
@@ -142,7 +184,6 @@ public class ShapesView extends View {
                 );
 
                 break;
-
 
             // TRIUNGHI
             case 2: {
@@ -173,7 +214,6 @@ public class ShapesView extends View {
 
                 break;
             }
-
 
             // STEA
             default: {
@@ -225,8 +265,6 @@ public class ShapesView extends View {
 
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
 
-            // Nu permite apasari multiple
-            // in timpul animatiei
             if (animating) {
                 return true;
             }
@@ -234,7 +272,6 @@ public class ShapesView extends View {
             float dx = e.getX() - cx;
             float dy = e.getY() - cy;
 
-            // Verifica daca forma a fost atinsa
             if (
                     dx * dx + dy * dy
                     <= size * size * 0.55f
@@ -248,7 +285,7 @@ public class ShapesView extends View {
                         100
                 );
 
-                // Forma dispare rapid
+                // Forma + halo dispar impreuna
                 animate()
                         .scaleX(0.15f)
                         .scaleY(0.15f)
@@ -256,10 +293,8 @@ public class ShapesView extends View {
                         .setDuration(120)
                         .withEndAction(() -> {
 
-                            // Pregateste forma urmatoare
                             nextShape();
 
-                            // Revine instant la dimensiunea normala
                             setScaleX(1f);
                             setScaleY(1f);
                             setAlpha(1f);
@@ -280,7 +315,6 @@ public class ShapesView extends View {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        // Elibereaza resursele audio
         toneGenerator.release();
     }
 }
