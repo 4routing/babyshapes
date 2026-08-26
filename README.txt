@@ -2,6 +2,12 @@ Baby Shapes - Android
 
 Joc fullscreen simplu pentru bebe: apasa forma colorata, aceasta dispare si apare alta in alta pozitie.
 
+Fundal negru:
+BabyShapesBlack.apk
+
+Fundal alb:
+BabyShapesWhite.apk
+
 Build in Android Studio:
 1. Open -> selecteaza folderul BabyShapesAndroid
 2. Lasa Gradle Sync sa se termine
