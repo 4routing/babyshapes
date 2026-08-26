@@ -1,9 +1,9 @@
-Baby Shapes - fundal negru
+Baby Shapes - Android
 
-Aplicatie Android fullscreen pentru bebe:
-- fundal complet negru
-- forme geometrice mari si colorate
-- la atingerea formei, aceasta dispare si apare alta in alta pozitie
-- fara meniuri, reclame sau scor
+Joc fullscreen simplu pentru bebe: apasa forma colorata, aceasta dispare si apare alta in alta pozitie.
 
-Pentru APK: deschide proiectul in Android Studio si alege Build > Build APK(s).
+Build in Android Studio:
+1. Open -> selecteaza folderul BabyShapesAndroid
+2. Lasa Gradle Sync sa se termine
+3. Build -> Build APK(s)
+4. APK-ul apare in app/build/outputs/apk/debug/app-debug.apk
